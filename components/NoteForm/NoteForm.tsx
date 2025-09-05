@@ -9,15 +9,16 @@ import { useNoteDraftStore } from "@/lib/store/noteStore";
 export default function NoteForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { draft, setDraft, clearDraft } = useNoteDraftStore();
+
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      router.back();
       clearDraft();
+      router.back();
     },
   });
-  const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
   const handleSubmit = (formData: FormData) => {
     const values = Object.fromEntries(formData) as unknown as NewNote;
@@ -27,15 +28,24 @@ export default function NoteForm() {
   const handleCancel = () => router.push("/notes/filter/All");
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setDraft({
       ...draft,
       [e.target.name]: e.target.value,
     });
   };
+
   return (
-    <form className={css.form} action={handleSubmit}>
+    <form
+      className={css.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+      }}
+    >
       <label className={css.formGroup}>
         Title
         <input
@@ -46,16 +56,18 @@ export default function NoteForm() {
           type="text"
         />
       </label>
+
       <label className={css.formGroup}>
         Content
-        <input
+        <textarea
           className={css.input}
           onChange={handleChange}
           value={draft.content}
           name="content"
-          type="textarea"
+          rows={8}
         />
       </label>
+
       <label className={css.formGroup}>
         Tag
         <select
@@ -64,17 +76,25 @@ export default function NoteForm() {
           value={draft.tag}
           name="tag"
         >
-          <option value="work">Work</option>
-          <option value="personal">Personal</option>
-          <option value="meeting">Meeting</option>
-          <option value="shopping">Shopping</option>
-          <option value="todo">Todo</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Todo">Todo</option>
         </select>
       </label>
+
       <button type="submit" className={css.submitButton}>
         Submit
       </button>
-      <button onClick={handleCancel} type="button" className={css.cancelButton}>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          handleCancel();
+        }}
+        type="button"
+        className={css.cancelButton}
+      >
         Cancel
       </button>
     </form>
