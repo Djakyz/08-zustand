@@ -78,11 +78,11 @@ export default function NoteForm() {
           value={draft.tag}
           name="tag"
         >
+          <option value="Todo">Todo</option>
           <option value="Work">Work</option>
           <option value="Personal">Personal</option>
           <option value="Meeting">Meeting</option>
           <option value="Shopping">Shopping</option>
-          <option value="Todo">Todo</option>
         </select>
       </label>
 

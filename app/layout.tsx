@@ -29,6 +29,7 @@ const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
   display: "swap",
+  weight: ["500", "700"],
 });
 
 export default function RootLayout({
