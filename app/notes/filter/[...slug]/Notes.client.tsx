@@ -9,16 +9,14 @@ import NoteList from "@/components/NoteList/NoteList";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
 import Loader from "@/components/Loader/Loader";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import Link from "next/link";
 
 interface NotesClientProps {
   tag: string;
 }
 
 const NotesClient = ({ tag }: NotesClientProps) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -32,14 +30,6 @@ const NotesClient = ({ tag }: NotesClientProps) => {
 
   const handlePageChange = (page: number) => {
     setPage(page);
-  };
-
-  const handleOpenModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalIsOpen(false);
   };
 
   const handleSearch = useDebouncedCallback((value: string) => {
@@ -57,9 +47,9 @@ const NotesClient = ({ tag }: NotesClientProps) => {
             onChange={handlePageChange}
           />
         )}
-        <button onClick={handleOpenModal} type="button" className={css.button}>
+        <Link href={"/notes/action/create/"} className={css.button}>
           Create note +
-        </button>
+        </Link>
       </header>
 
       {isSuccess && data && data?.notes.length > 0 ? (
@@ -69,11 +59,6 @@ const NotesClient = ({ tag }: NotesClientProps) => {
       )}
       {isLoading && !data && <Loader />}
       {isError && <ErrorMessage />}
-      {modalIsOpen && (
-        <Modal closeModal={handleCloseModal}>
-          <NoteForm closeModal={handleCloseModal} />
-        </Modal>
-      )}
     </div>
   );
 };
