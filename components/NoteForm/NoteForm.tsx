@@ -54,6 +54,7 @@ export default function NoteForm() {
           value={draft.title}
           name="title"
           type="text"
+          required
         />
       </label>
 
@@ -65,6 +66,7 @@ export default function NoteForm() {
           value={draft.content}
           name="content"
           rows={8}
+          required
         />
       </label>
 
